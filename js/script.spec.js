@@ -39,18 +39,36 @@ describe('meets expectations', () => {
       })
 
       describe('the card contents', () => {
+        let cards = null
+
+        before(() => {
+          cards = document.querySelector('#gallery').children
+        })
+
         it('must have the expected children', () => {
           const expected = [
             'DIV.card-img-container',
             'DIV.card-info-container'
           ]
 
-          const firstCard = document.querySelector('#gallery').children[0]
-          const actual = Array.from(firstCard.children).map((child) => {
-            return `${child.tagName}.${child.className}`
-          })
+          cards.forEach((card) => {
+            const actual = Array.from(card.children).map((child) => {
+              return `${child.tagName}.${child.className}`
+            })
 
-          expect(actual).to.deep.equal(expected)
+            expect(actual).to.deep.equal(expected)
+          })
+        })
+
+        describe('the first child', () => {
+          it('must be the expected markup', () => {
+            const pattern = /regex/ // fix this FFS
+
+            cards.forEach((card) => {
+              const actual = card.children[0].innerHTML.trim()
+              expect(actual).to.match(pattern)
+            })
+          })
         })
       })
     })
