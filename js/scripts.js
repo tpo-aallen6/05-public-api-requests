@@ -20,7 +20,8 @@ function createCard (data) {
     card.className = 'card'
     card.style.backgroundColor = 'OldLace'
     card.style.borderWidth = 'thick'
-    cardText.forEach(card => { card.style.color = 'black' })
+    cardText.forEach(card => {
+      card.style.color = 'black'})
     card.insertAdjacentHTML('beforeend', html)
     document.querySelector('#gallery').insertAdjacentElement('beforeend', card)
 
@@ -69,7 +70,7 @@ function createModal (result) {
 
 fetch('https://randomuser.me/api?results=12&nat=us')
   .then(response => { return response.json() })
-  .then(data => createCard(data))
+  .then(data => { createCard(data) })
 
 const searchBar = `
   <form action="#" method="get">
@@ -78,3 +79,23 @@ const searchBar = `
   </form>`
 
 document.querySelector('.search-container').insertAdjacentHTML('beforeend', searchBar)
+
+document.querySelector('#search-input').addEventListener('keyup', (e) => {
+  const searchInput = document.querySelector('#search-input').value.toLowerCase()
+  const cardNodeList = document.querySelectorAll('h3#name')
+  const h3Array = Array.from(cardNodeList)
+
+  for (let i = 0; i < h3Array.length; i++) {
+    if (searchInput !== '') {
+      const h3String = h3Array[i].textContent.toLowerCase()
+
+      if (h3String.includes(searchInput)) {
+        h3Array[i].parentNode.parentNode.style.display = ''
+      } else {
+        h3Array[i].parentNode.parentNode.style.display = 'none'
+      }
+    } else {
+      h3Array[i].parentNode.parentNode.style.display = ''
+    }
+  }
+})
