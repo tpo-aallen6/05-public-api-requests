@@ -34,13 +34,16 @@ function createCard (data) {
       </div>`
 
     card.className = 'card'
-    card.style.backgroundColor = 'OldLace'
+    card.style.backgroundColor = 'white'
     card.style.borderWidth = 'thick'
     cardText.forEach(card => { card.style.color = 'black' })
     card.insertAdjacentHTML('beforeend', html)
     document.querySelector('#gallery').insertAdjacentElement('beforeend', card)
 
-    card.addEventListener('click', (e) => { createModal(result) })
+    card.addEventListener('click', () => {
+      createModal(result)
+      cardIndex = resultArray.indexOf(result)
+    })
   })
 }
 
@@ -86,9 +89,18 @@ function createModal (result) {
   modal.insertAdjacentHTML('beforeend', html)
   document.body.insertAdjacentElement('beforeend', modal)
 
+  /**
+   * Click event listener that closes the modal card
+   */
+
   document.querySelector('#modal-close-btn').addEventListener('click', () => {
     modal.remove()
   })
+
+  /**
+   * Click event listener that allows clicking through to the previous
+   * or next users based on whichever button is clicked
+   */
 
   document.querySelector('.modal-btn-container').addEventListener('click', (e) => {
     if (e.target.tagName === 'BUTTON' && e.target.textContent === 'Prev') {
