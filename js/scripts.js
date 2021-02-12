@@ -1,8 +1,24 @@
+/**
+* Treehouse Techdegree: Adam Allen
+* FSJS Project 5 - Public API Requests
+**/
+
+const resultArray = []
+let cardIndex = 0
+
 document.querySelector('body').style.backgroundColor = 'LightSteelBlue'
 document.querySelector('h1').style.color = 'black'
 
+/**
+ * Creates a card for each user in the data set
+ * and adds html with the user's information.
+ * Applies custom styling to each created card.
+ * When a card is clicked createModal is called.
+ */
+
 function createCard (data) {
   data.results.forEach(result => {
+    resultArray.push(result)
     const card = document.createElement('div')
     const cardText = Array.from(document.querySelectorAll('.card-text'))
     const fullName = `${result.name.first} ${result.name.last}`
@@ -20,14 +36,21 @@ function createCard (data) {
     card.className = 'card'
     card.style.backgroundColor = 'OldLace'
     card.style.borderWidth = 'thick'
-    cardText.forEach(card => {
-      card.style.color = 'black'})
+    cardText.forEach(card => { card.style.color = 'black' })
     card.insertAdjacentHTML('beforeend', html)
     document.querySelector('#gallery').insertAdjacentElement('beforeend', card)
 
-    card.addEventListener('click', () => createModal(result))
+    card.addEventListener('click', (e) => { createModal(result) })
   })
 }
+
+/**
+ * Creates a modal card with additional details for a user and
+ * adds html with all the necessary user information.
+ * Event listener that removes the modal card when close is clicked.
+ * Event listener that removes the modal card and creats a new modal
+ * for the previous or next card based on which button is clicked.
+ */
 
 function createModal (result) {
   const modal = document.createElement('div')
@@ -66,6 +89,26 @@ function createModal (result) {
   document.querySelector('#modal-close-btn').addEventListener('click', () => {
     modal.remove()
   })
+
+  document.querySelector('.modal-btn-container').addEventListener('click', (e) => {
+    if (e.target.tagName === 'BUTTON' && e.target.textContent === 'Prev') {
+      if (cardIndex > 0) {
+        modal.remove()
+        cardIndex--
+        createModal(resultArray[cardIndex])
+      } else {
+        e.target.disabled = true
+      }
+    } else if (e.target.tagName === 'BUTTON' && e.target.textContent === 'Next') {
+      if (cardIndex < (resultArray.length - 1)) {
+        modal.remove()
+        cardIndex++
+        createModal(resultArray[cardIndex])
+      } else {
+        e.target.disabled = true
+      }
+    }
+  })
 }
 
 fetch('https://randomuser.me/api?results=12&nat=us')
@@ -78,12 +121,20 @@ const searchBar = `
     <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
   </form>`
 
+/**
+ * Creates a search bar
+ */
+
 document.querySelector('.search-container').insertAdjacentHTML('beforeend', searchBar)
+
+/**
+ * Keyup event listener to search for users by name
+ */
 
 document.querySelector('#search-input').addEventListener('keyup', (e) => {
   const searchInput = document.querySelector('#search-input').value.toLowerCase()
-  const cardNodeList = document.querySelectorAll('h3#name')
-  const h3Array = Array.from(cardNodeList)
+  const h3NodeList = document.querySelectorAll('h3#name')
+  const h3Array = Array.from(h3NodeList)
 
   for (let i = 0; i < h3Array.length; i++) {
     if (searchInput !== '') {
